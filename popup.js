@@ -1,3 +1,11 @@
+// Load chat transcript from localStorage when the plugin is initialized
+document.addEventListener('DOMContentLoaded', function() {
+    const savedChat = localStorage.getItem('chatTranscript');
+    if (savedChat) {
+        document.getElementById('results').innerHTML = savedChat;
+    }
+});
+
 document.getElementById('sendToOpenAI').addEventListener('click', function() {
     const model = document.getElementById('model').value;
     const inputData = document.getElementById('inputData').value;
@@ -8,7 +16,11 @@ document.getElementById('sendToOpenAI').addEventListener('click', function() {
     }
 
     // Display user's query in the chat history with user-message styling
-    document.getElementById('results').innerHTML += `<div class="user-message">${inputData}</div>`;
+    const formattedInput = inputData.replace(/\n/g, '<br>');
+    document.getElementById('results').innerHTML += `<div class="user-message">${formattedInput}</div>`;
+    
+    // Save chat transcript to localStorage
+    localStorage.setItem('chatTranscript', document.getElementById('results').innerHTML);
 
     // Clear the input text box
     document.getElementById('inputData').value = '';
@@ -32,7 +44,7 @@ document.getElementById('sendToOpenAI').addEventListener('click', function() {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            'Authorization': 'Bearer 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' // Replace with your API key
+            'Authorization': 'Bearer YourAPIKey' // Replace with your API key
         },
         body: JSON.stringify(data)
     })
@@ -49,8 +61,8 @@ document.getElementById('sendToOpenAI').addEventListener('click', function() {
                 if (done) {
                     // Display the full message with assistant-message styling
                     if (fullMessage) {
-                        document.getElementById('results').innerHTML += `<div class="assistant-message">${fullMessage}</div>`;
-                        fullMessage = "";
+                        const formattedResponse = fullMessage.replace(/\n/g, '<br>');
+                        document.getElementById('results').innerHTML += `<div class="assistant-message">${formattedResponse}</div>`;
                     }
                     return;
                 }
@@ -92,4 +104,6 @@ document.getElementById('sendToOpenAI').addEventListener('click', function() {
 // Add a button to start a new chat and clear the chat history
 document.getElementById('startNewChat').addEventListener('click', function() {
     document.getElementById('results').innerHTML = '';
+    // Clear chat transcript from localStorage
+    localStorage.removeItem('chatTranscript');
 });
