@@ -63,6 +63,8 @@ document.getElementById('sendToOpenAI').addEventListener('click', function() {
                     if (fullMessage) {
                         const formattedResponse = fullMessage.replace(/\n/g, '<br>');
                         document.getElementById('results').innerHTML += `<div class="assistant-message">${formattedResponse}</div>`;
+                        // Update local storage with the updated chat transcript
+                        localStorage.setItem('chatTranscript', document.getElementById('results').innerHTML);
                     }
                     return;
                 }
