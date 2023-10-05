@@ -172,9 +172,10 @@ let report = createReport('{folder_name}', outputs, page_titles, [getOriginalNam
     false,false,false,plot);
 let tables = [];
 recursiveGetAllTablesAndPlotsInGroup(report, tables);
-for (j = 0; j < rules.length; j++)
-for (i = 0; i < tables.length; i++){
-    let rule = project.rules.newFromLibrary(rules[i], null);
-    tables[i].rules.add(rule);
+for (j = 0; j < rules.length; j++){
+    for (i = 0; i < tables.length; i++){
+        let rule = project.rules.newFromLibrary(rules[i], null);
+        tables[i].rules.add(rule);
+    }
 }
 """
