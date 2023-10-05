@@ -167,7 +167,7 @@ let plot = false; // change to true if user requests plots or charts or visualiz
 let rules = ['{rule_1}','{rule_2}',...]; // If no rules make this an empty array. don't supply this to createReport
 
 //Run the function
-createReport('{folder_name}', outputs, page_titles, [getOriginalName('Column %'), getOriginalName('{statistic_1}', getOriginalName('{statistic_2}'),...], null, 
+let report = createReport('{folder_name}', outputs, page_titles, [getOriginalName('Column %'), getOriginalName('{statistic_1}', getOriginalName('{statistic_2}'),...], null, 
     [filter_1.variables[0],...], // If no filters make this an empty array
     false,false,false,plot);
 let tables = [];
