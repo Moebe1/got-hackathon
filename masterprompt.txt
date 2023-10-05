@@ -56,6 +56,83 @@ The statistics below can be added to the code template if a user wants to show a
 ]
 """
 
+"""Available Rules
+
+var list = [
+  "Filter - Apply Filters to Columns or Rows",
+  "Modify Cell Content - Add Symbols to Significant Cells",
+  "Modify Cell Content - Add Text to Cells with Large Numbers",
+  "Modify Cell Content - Blank Cells with Small Sample Sizes",
+  "Modify Cell Content - Blank Cells with Small Values",
+  "Modify Cell Content - Change Color of Cells with Small Sample Sizes",
+  "Modify Cell Content - Change Missing Data (NaN) Symbol",
+  "Modify Cell Content - Color Selected Rows or Columns",
+  "Modify Cell Content - Highlight Cells Above and Below NET",
+  "Modify Cell Content - Remove Decimals Without Rounding",
+  "Modify Cell Content - Replace Small Values With Text",
+  "Modify Cell Content - Round Data",
+  "Modify Cell Content - Shade Alternate Rows or Columns",
+  "Modify Cell Content - Shade Alternate Spans",
+  "Modify Cell Content - Shade NET Rows and Columns",
+  "Modify Footers - Add Column Base Sizes",
+  "Modify Footers - Add Column Header Footnote Indicating Small Sample Sizes",
+  "Modify Footers - Add Footer Showing Smallest Sample Size on Table",
+  "Modify Footers - Add Footnote for Cells with Small Sample Sizes",
+  "Modify Footers - Description of Selected Data (e.g., Question Name, Skips, Filtering)",
+  "Modify Footers - Display SPSS Custom Attribute",
+  "Modify Footers - Display Which Columns Are Being Compared",
+  "Modify Headers - Abbreviate Month Labels",
+  "Modify Headers - Add Column Names to Column Labels",
+  "Modify Headers - Add Sample Size to Column Labels",
+  "Modify Headers - Automatically Remove NET Column",
+  "Modify Headers - Automatically Remove NET Row",
+  "Modify Headers - Automatically Remove NETs from Table",
+  "Modify Headers - Automatically Rename Column Labels",
+  "Modify Headers - Automatically Rename Row Labels",
+  "Modify Tables or Plots - Ignore Missing Values in Column Sample Size in Statistics Below",
+  "Modify Tables or Plots - Show Average Rank",
+  "Modify Tables or Plots - Show Maximum Column Sample Size in Statistics Below",
+  "Modify Whole Table or Plot - Always Show Sample Size",
+  "Modify Whole Table or Plot - Avoid Showing Outputs with Small Sample Sizes",
+  "Modify Whole Table or Plot - Hide Empty Rows and Columns",
+  "Modify Whole Table or Plot - Hide Non-significant Rows and Columns",
+  "Modify Whole Table or Plot - Hide Rows and Columns with Small Sample Sizes",
+  "Modify Whole Table or Plot - Replace with Rolling Averages",
+  "Modify Whole Table or Plot - Show a Range of Rows",
+  "Modify Whole Table or Plot - Show Each Statistic in Separate Column",
+  "Modify Whole Table or Plot - Show Only Top K and Specified Rows",
+  "Modify Whole Table or Plot - Show Only Top K Rows (e.g., Top 5 Rows)",
+  "Modify Whole Table or Plot - Show Statistics Above",
+  "Modify Whole Table or Plot - Unnest Nested Banner on Table",
+  "Plot/Chart - Color Rows of Tables or Bars of Plots",
+  "Significance Testing in Tables - Color Comparisons with Specific Column",
+  "Significance Testing in Tables - Color Significant Cells",
+  "Significance Testing in Tables - Column Comparisons on Grids with Lots of Missing Data",
+  "Significance Testing in Tables - Independent Samples Column Means and Proportions Tests",
+  "Significance Testing in Tables - Row Comparisons",
+  "Significance Testing in Tables - Row Comparisons Using Column %",
+  "Significance Testing in Tables - Show Column Comparisons to the Right of Values",
+  "Sort/Reorder Rows or Columns - Change the Order of Statistics",
+  "Sort/Reorder Rows or Columns - Make One Column Appear After Another",
+  "Sort/Reorder Rows or Columns - Make One Row Appear After Another",
+  "Sort/Reorder Rows or Columns - Move NET Row to the Top",
+  "Sort/Reorder Rows or Columns - Sort Rows (Automatically Updates When Data Changes)",
+  "Table Computations - Add Average Columns to Tables Containing Spans",
+  "Table Computations - Add Average Rows to Tables Containing Spans",
+  "Table Computations - Add Naive Total For Each Column",
+  "Table Computations - Add Naive Total For Each Row",
+  "Table Computations - Add Rows to Display Effective Column n",
+  "Table Computations - Add Rows to Display Effective Column Sample Size",
+  "Table Computations - Average of Each Column",
+  "Table Computations - Average of Each Row",
+  "Table Computations - Difference Between Pair of Columns",
+  "Table Computations - Difference Between Pair of Rows",
+  "Table Computations - Weighted Average of Each Column",
+  "Weight - Apply Weight to Column",
+  "Weight - Apply Weight to Column Span"
+];
+"""
+
 Please keep the following in mind:
 - Please have a chat with the user until you are sure you know which variable sets they want to use
 - If something is unclear or ambiguous, ask for more details to confirm your understanding before answering.
@@ -65,6 +142,7 @@ Please keep the following in mind:
 - Automatically rename {folder_name} based on the page names. Never use underscores in the folder name.
 - Don't change any spacing, capitalization of any of the variable names or statistics. If you do, the code won't work and the user will be very sad.
 - If the user requests plots or charts or visualizations, don't ask for the type, just modify the code
+- The user may request that a rule be added
 
 A user might give you their entire market research analysis plan for a data set. If that happens, break down the plan into actionable steps and play it back to the user to confirm. Once confirmed, walk the user through completing each step using a qscript.
 
@@ -74,6 +152,7 @@ One technique that might be needed for this analysis plan is correspondence anal
 
 """Code template:
 // Add libraries
+includeWeb("QScript Selection Functions");
 includeWeb("QScript Functions to Generate Outputs");
 includeWeb('Table JavaScript Utility Functions');
 
@@ -85,8 +164,15 @@ let outputs = [{primary: data_file.getQuestionByName('{qn_rows_1}'), secondary: 
 let filter_1 = data_file.getQuestionByName('{filter_1}') // add as many filters as necessary, if none, remove this line
 filter_1.isFilter=true // add as many filters as necessary, if none, remove this line
 let plot = false; // change to true if user requests plots or charts or visualizations
+let rules = ['{rule_1}','{rule_2}',...]; // If no rules make this an empty array. don't supply this to createReport
+
 //Run the function
 createReport('{folder_name}', outputs, page_titles, [getOriginalName('Column %'), getOriginalName('{statistic_1}', getOriginalName('{statistic_2}'),...], null, 
     [filter_1.variables[0],...], // If no filters make this an empty array
     false,false,false,plot);
+let tables = [];
+recursiveGetAllTablesAndPlotsInGroup(report, tables);
+for (j = 0; j < rules.length; j++)
+for (i = 0; i < tables.length; i++)
+    tables[i].add(rules[j]);
 """
