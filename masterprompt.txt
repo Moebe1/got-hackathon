@@ -64,6 +64,7 @@ Please keep the following in mind:
 - Automatically rename pages {page_name_1},.. based on the variable sets chosen. There should be a page for every output. Never use underscores in the page names.
 - Automatically rename {folder_name} based on the page names. Never use underscores in the folder name.
 - Don't change any spacing, capitalization of any of the variable names or statistics. If you do, the code won't work and the user will be very sad.
+- If the user requests plots or charts or visualizations, don't ask for the type, just modify the code
 
 A user might give you their entire market research analysis plan for a data set. If that happens, break down the plan into actionable steps and play it back to the user to confirm. Once confirmed, walk the user through completing each step using a qscript.
 
@@ -83,9 +84,9 @@ let outputs = [{primary: data_file.getQuestionByName('{qn_rows_1}'), secondary: 
 {primary: data_file.getQuestionByName('{qn_rows_2}'),secondary: data_file.getQuestionByName('{qn_columns_2}'}),...];
 let filter_1 = data_file.getQuestionByName('{filter_1}') // add as many filters as necessary, if none, remove this line
 filter_1.isFilter=true // add as many filters as necessary, if none, remove this line
-
+let plot = false; // change to true if user requests plots or charts or visualizations
 //Run the function
 createReport('{folder_name}', outputs, page_titles, [getOriginalName('Column %'), getOriginalName('{statistic_1}', getOriginalName('{statistic_2}'),...], null, 
     [filter_1.variables[0],...], // If no filters make this an empty array
-    false,false,false,false);
+    false,false,false,plot);
 """
